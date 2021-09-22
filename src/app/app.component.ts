@@ -1,68 +1,77 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {jqxGridComponent} from "jqwidgets-ng/jqxgrid";
+import {generateTheData} from "./generate-data";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  title = 'JQX';
-  columns: any[] = [
+export class AppComponent {
+  url = 'http://localhost:3001/getdata';
+  source: any =
     {
-      text: 'Id', datafield: 'id', columntype: 'numberinput',
-      validation: (cell: any, value: number): any => {
-        if (value < 0 || value > 150) {
-          return {result: false, message: 'Quantity should be in the 0-150 interval'};
+      url: this.url,
+      datafields: [
+        {
+          name: 'CompanyName',
+        }, {
+          name: 'ContactName',
+          map: 'first_name'
+        }, {
+          name: 'ContactTitle',
+          map: 'last_name'
+        }, {
+          name: 'Address',
+          map: 'address'
+        }, {
+          name: 'City',
+          map: 'city'
+        }, {
+          name: 'Country',
+          map: 'country_region'
         }
-        return true;
+      ],
+      datatype: 'json',
+      root: 'Rows',
+      cache: false,
+      beforeprocessing: (data: any) => {
+        this.source.totalrecords = data.TotalRows;
       }
-    },
-    {text: 'Name', datafield: 'name'}
-  ];
+    };
 
-  data = [
-    {id: 1, name: 'Hydrogen'},
-    {id: 2, name: 'Helium'},
-    {id: 3, name: 'Lithium'},
-    {id: 4, name: 'Beryllium'},
-    {id: 5, name: 'Boron'},
-    {id: 6, name: 'Carbon'},
-    {id: 7, name: 'Nitrogen'},
-    {id: 8, name: 'Oxygen'},
-    {id: 9, name: 'Fluorine'},
-    {id: 10, name: 'Neon'},
-    {id: 11, name: 'Sodium'},
-    {id: 12, name: 'Magnesium'},
-    {id: 13, name: 'Aluminum'},
-    {id: 14, name: 'Silicon'},
-    {id: 15, name: 'Phosphorus'},
-    {id: 16, name: 'Sulfur'},
-    {id: 17, name: 'Chlorine'},
-    {id: 18, name: 'Argon'},
-    {id: 19, name: 'Potassium'},
-    {id: 20, name: 'Calcium'}
-  ]
+  dataAdapter: any = new jqx.dataAdapter(this.source);
 
-  source = new jqx.dataAdapter({
-    localData: this.data,
-    datafields:
-      [
-        {name: 'name', type: 'string'},
-        {name: 'id', type: 'number'}
-      ]
-  });
+  columns: any[] =
+    [
+      {
+        text: 'Company Name',
+        datafield: 'CompanyName',
+        width: 250
+      }, {
+      text: 'Contact Name',
+      datafield: 'ContactName',
+      width: 200
+    }, {
+      text: 'Contact Title',
+      datafield: 'ContactTitle',
+      width: 200
+    }, {
+      text: 'Address',
+      datafield: 'Address',
+      width: 180
+    }, {
+      text: 'City',
+      datafield: 'City',
+      width: 100
+    }, {
+      text: 'Country',
+      datafield: 'Country'
+    }
+    ];
 
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-
-  }
-
-  logEvent($event: any) {
-    console.log($event);
-    console.log(this.data);
-    console.log(this.source);
+  rendergridrows(params: any): any {
+    return params.data;
   }
 }
 

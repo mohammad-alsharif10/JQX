@@ -1,14 +1,10 @@
 <jqxGrid
-  [selectionmode]="'checkbox'"
-  [source]="source"
-  [theme]="'material'"
+  [width]="800"
+  [source]="dataAdapter"
+  [filterable]="true"
+  [columns]="columns"
   [autoheight]="true"
   [pageable]="true"
-  [altrows]="true"
-  [filterable]="true"
-  [sortable]="true"
-  [columns]="columns"
-  [editable]="true"
-  (onCellvaluechanged)="logEvent($event)"
-  #grid>
+  [virtualmode]="true"
+  [rendergridrows]="rendergridrows">
 </jqxGrid>
